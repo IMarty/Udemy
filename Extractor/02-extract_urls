@@ -1,0 +1,6 @@
+#!/bin/bash
+
+grep -o 'https://www.udemy.com/[[:alnum:]+\.\_\-]*/?[[:alnum:]+\.\_\-]*=[[:alnum:]+\.\_\-]*' result.txt | sort | uniq -i > urls_code.txt
+rm result.txt
+
+exit 0

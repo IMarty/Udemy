@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cat ../Result/ancien_urls.txt | sort | uniq -i > ../Result/ancien_urls_temp.txt
+mv -f ../Result/ancien_urls_temp.txt ../Result/ancien_urls.txt
+
+diff ../Result/list_free.txt ../Result/ancien_urls.txt | grep "^<" | cut -d" " -f2 >> ../Result/new_list.txt
+rm ../Result/list_free.txt
+
+exit 0

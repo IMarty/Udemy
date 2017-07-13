@@ -1,0 +1,32 @@
+#!/bin/bash
+
+user=`zenity --entry --title "Get Courses of a User" --text "URL : "`
+sortie=`zenity --file-selection --save --title "Get Courses of a User - Save File"`
+
+if [ "$user" == "" ]; then
+	zenity --critical --title "Get Courses of a User" --text "URL nécessaire !"
+	exit 1
+fi
+
+if [ "$sortie" == "" ]; then
+	sortie="$HOME/liste_user.txt"
+fi
+
+for i in {1..50}
+do
+	for id in `curl $user?subscribed_courses=$i | grep -o 'data-courseid="[[:alnum:]+\.\_\-]*"' | cut -d"=" -f2 | sed 's/"//g'`
+	do
+		echo "https://www.udemy.com/$id" >> temp.txt
+	done
+done
+
+while IFS='' read -r line || [[ -n "$line" ]]; do
+	url=`curl -L "$line" | grep -m 1 'property="og:url" content' | grep -o 'https://www.udemy.com/[[:alnum:]+\.\_\-]*/'`
+	echo "$url" >> nonord.txt
+done < temp.txt
+rm temp.txt
+
+cat nonord.txt | sort | uniq -i > "$sortie"
+rm nonord.txt
+
+exit 0

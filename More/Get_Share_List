@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ "$1" == "" ]; then
+	fichier=`zenity --file-selection --title "Verificate Coupons List :"`
+	sortie=`zenity --file-selection --save --title "Verificate Coupons List :"`
+else
+	fichier="$1"
+	sortie="$2"
+fi
+
+while IFS='' read -r line || [[ -n "$line" ]]; do
+	coupon=`echo $line | cut -d"=" -f2`
+	titre=`wget -qO- "$line" | perl -l -0777 -ne 'print $1 if /<title.*?>\s*(.*?)\s*<\/title/si' | cut -d"|" -f1`
+	echo "$titre : $line ( Coupon : $coupon )" | sed 's/&amp//g' >> /tmp/get_share_list.txt
+done < "$fichier"
+
+nbcours=`cat /tmp/get_share_list.txt | wc -l`
+
+cat /tmp/get_share_list.txt | awk '{ print $0 ; print ""; }' > "$sortie"
+rm /tmp/get_share_list.txt
+
+zenity --info --title "Share List Creaton" --text "Fini. Nombre de cours : $nbcours"
+
+exit 0

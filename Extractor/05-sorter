@@ -1,0 +1,21 @@
+#!/bin/bash
+
+cat ../Result/new_list.txt >> ../Result/ancien_urls.txt
+cat ../Result/new_list.txt | sort | uniq -i >> ../Checkout/add_list.txt
+
+rm ../Result/new_list.txt
+
+mv -f ../Result/ancien_urls.txt ../Result/ancien_urls_temp.txt
+while IFS='' read -r line || [[ -n "$line" ]]; do
+	test=`curl -L $line | grep "100% off"`
+	if [ "$test" != "" ]; then
+		echo $line >> ../Result/ancien_urls_dos.txt
+	fi
+done < ../Result/ancien_urls_temp.txt
+
+cat ../Result/ancien_urls_dos.txt | sort | uniq -i > ../Result/ancien_urls.txt
+
+rm ../Result/ancien_urls_dos.txt
+rm ../Result/ancien_urls_temp.txt
+
+exit 0

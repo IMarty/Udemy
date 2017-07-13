@@ -1,0 +1,29 @@
+#!/bin/bash
+
+for i in {1..10}
+do
+	curl -L https://udemycoupon.learnviral.com/coupon-category/free100-discount/page/$i/ >> result_tmp.txt
+	curl -L http://www.anycouponcode.net/category/online-course/udemy/page/$i/ >> result_tmp.txt
+	curl -L http://mhfree.com/category/coupon/udemy-coupon/page/$i/ >> result_tmp.txt
+	curl -L http://nulledpk.com/category/udemy-coupon-codes/page/$i/ >> result_tmp.txt
+	curl -L http://udemy.top/page/$i/ >> result_tmp.txt
+	curl -L http://nulledlab.com/category/training-video/udemy-courses/page/$i/ >> result_tmp.txt
+	curl -L https://udemycoupon.org/coupon-tag/100-off-udemy-coupon/page/$i/ >> result_tmp.txt
+done
+
+curl -L https://www.desidime.com/stores/udemy/ >> result_tmp.txt
+curl -L https://www.facebook.com/udemycoupon100off/ >> result_tmp.txt
+curl -L http://www.promocoupons24.com/search?q=udemy+100%25 >> result_tmp.txt
+
+question=`zenity  --list  --width "250" --height "200" --title "Grab Pages" --text "Intégrer Ozbargain ?" --radiolist  --column "Choix" --column "Réponses" TRUE "Oui" FALSE "Non"`
+if [ "$question" == "Oui" ]; then
+	for i in `curl -L https://www.ozbargain.com.au/deals/udemy.com#coupons | grep 'href="/node' | grep -o 'node/[[:alnum:]+\.\_\-]*'`
+	do
+		curl -L https://www.ozbargain.com.au/$i >> result_tmp.txt
+	done
+fi
+
+cat result_tmp.txt | sort | uniq -i > result.txt
+rm result_tmp.txt
+
+exit 0
