@@ -14,7 +14,7 @@ Ces scripts nécessitent un système Linux avec Bash et curl.
 
 ## Auteur
 
-* Oletros venant d'EfreiSec.fr : Etudiant de l'école d'ingénieur EFREI.
+* Oletros - https://esprit-hack.fr/author/Oletros.
 
 ## Licence
 
