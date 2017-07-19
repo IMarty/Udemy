@@ -1,0 +1,24 @@
+#!/bin/bash
+
+dt=`date +%d-%m-%Y`
+
+selection=`zenity --file-selection --title "Fichier contenant les cours à ajouter"`
+
+#dep=`dpkg -s xdotool | grep dpkg-query`
+#if [ "$dep" != "" ]; then
+#	apt-get -y install xdotool
+#fi
+
+#ffid=`xdotool search "Mozilla Firefox" | head -1`
+#xdotool windowactivate --sync $ffid
+	
+echo -e "\\033[1;31m""Ajout de `cat $selection | wc -l` courses à votre compte !""\\e[m\n\n"
+
+while IFS='' read -r line || [[ -n "$line" ]]; do
+	id=`curl -L $line | grep "data-clp-course-id" | cut -d"=" -f2 | sed 's/"//g'`
+	coupon=`echo $line | cut -d"=" -f2`
+	firefox "https://www.udemy.com/payment/checkout/?boType=course&boId=$id&couponCode=$coupon"
+	#xdotool key 'ctrl+w'
+done < $selection
+
+exit 0
